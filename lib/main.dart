@@ -89,37 +89,104 @@ class _MorseHomeState extends State<MorseHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Secret Morse Sender"),
-        backgroundColor: Colors.black,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _controller,
-              decoration: const InputDecoration(
-                labelText: "Enter Secret Message",
-                border: OutlineInputBorder(),
+      body: Stack(
+        children: [
+          // Background Image
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/spy_bg.jpg"),
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 20),
+          ),
 
-            ElevatedButton(
-              onPressed: sendMorse,
-              child: const Text("Convert & Send"),
+          // Dark Overlay
+          Container(
+            color: Colors.black.withOpacity(0.7),
+          ),
+
+          // Main Content
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Column(
+                children: [
+                  const Spacer(flex: 1), // Push everything down
+                  _buildInputField(),
+                  const SizedBox(height: 20),
+                  _buildSendButton(),
+                  const SizedBox(height: 30),
+                  _buildStatusCard(),
+                  const Spacer(flex: 1), // Optional extra space at bottom
+                ],
+              ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
 
-            const SizedBox(height: 30),
+  Widget _buildInputField() {
+    return TextField(
+      controller: _controller,
+      style: const TextStyle(color: Colors.white, fontSize: 16),
+      decoration: InputDecoration(
+        labelText: "Enter Secret Message",
+        labelStyle: const TextStyle(color: Colors.white70),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.2),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.white70),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.white, width: 2),
+        ),
+      ),
+    );
+  }
 
-            Text(
-              status,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 15),
+  Widget _buildSendButton() {
+    return ElevatedButton(
+      onPressed: sendMorse,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      child: const Text(
+        "SEND",
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+          letterSpacing: 1.2,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusCard() {
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.all(15),
+        
+        child: SingleChildScrollView(
+          child: Text(
+            status.isEmpty ? "Awaiting transmission..." : status,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              letterSpacing: 1.2,
             ),
-          ],
+          ),
         ),
       ),
     );
